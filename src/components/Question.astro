@@ -52,13 +52,88 @@ import { questions } from '../data/data';
 
         if (questions[question].answer === hash256){
             nextQuestion()
+        } else {
+            let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
+            failureCount++;
+            localStorage.setItem('failureCount', failureCount);
+
+            const showPopup = () => {
+                const popup = document.createElement('div');
+                popup.style.position = 'fixed';
+                popup.style.top = '0';
+                popup.style.left = '0';
+                popup.style.width = '100%';
+                popup.style.height = '100%';
+                popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                popup.style.display = 'flex';
+                popup.style.justifyContent = 'center';
+                popup.style.alignItems = 'center';
+                popup.style.zIndex = '1000';
+
+                const video = document.createElement('video');
+                video.src = '/videoplayback.mp4';
+                video.autoplay = true;
+                video.loop = true;
+                video.style.width = 'auto';
+                video.style.height = '80%';
+                video.style.objectFit = 'cover';
+
+                const timer = document.createElement('div');
+                timer.style.position = 'absolute';
+                timer.style.bottom = '20px';
+                timer.style.color = '#fff';
+                timer.style.fontSize = '20px';
+
+                popup.appendChild(video);
+                popup.appendChild(timer);
+                document.body.appendChild(popup);
+
+                let remainingTime = Math.pow(2, failureCount - 1);
+                timer.innerText = `Temps restant: ${remainingTime} segons`;
+
+                const interval = setInterval(() => {
+                    remainingTime--;
+                    timer.innerText = `Temps restant: ${remainingTime} segons`;
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                    }
+                }, 1000);
+
+                setTimeout(() => {
+                    const closeButton = document.createElement('button');
+                    closeButton.innerText = 'Tancar';
+                    closeButton.style.position = 'absolute';
+                    closeButton.style.top = '20px';
+                    closeButton.style.right = '20px';
+                    closeButton.style.padding = '10px 20px';
+                    closeButton.style.backgroundColor = '#FF204E';
+                    closeButton.style.color = '#fff';
+                    closeButton.style.border = 'none';
+                    closeButton.style.borderRadius = '5px';
+                    closeButton.style.cursor = 'pointer';
+
+                    closeButton.addEventListener('click', () => {
+                        document.body.removeChild(popup);
+                    });
+
+                    popup.appendChild(closeButton);
+                    timer.style.display = 'none';
+                }, Math.pow(2, failureCount - 1) * 1000);
+            };
+
+            showPopup();
         }
+
+        /*window.addEventListener('load', () => {
+            localStorage.setItem('failureCount', '0');
+        });*/
+
     });
 
     const setNewQuestion = () => {
         const question = parseInt(document.getElementById('input-question-id').value);
         document.querySelector('.label-question').innerHTML = questions[question].question;
-        
+        localStorage.setItem('failureCount', '0');
         const inputAnswer = document.getElementById('input-answer')
         inputAnswer.value = ''
         inputAnswer.placeholder = questions[question].placeholder;

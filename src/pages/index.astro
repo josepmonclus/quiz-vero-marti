@@ -1,0 +1,37 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+import Question from '../components/Question.astro'
+---
+
+<Layout title="Give me my fuckin money!">
+	<main>
+		<h1 class="text-neon-medium-light">
+			Quiz <span class="text-neon-light">Vero</span> & <span class="text-neon-light">Martí</span>
+		</h1>
+		
+		<Question 
+			question='Com et dius?'
+			answer='MARTÍ'
+		/>
+	</main>
+</Layout>
+
+<style>
+	main {
+		margin: auto;
+		padding: 1rem;
+		width: 800px;
+		max-width: calc(100% - 2rem);
+		font-size: 20px;
+		line-height: 1.6;
+	}
+	h1 {
+		font-size: 4rem;
+		font-weight: 700;
+		line-height: 1;
+		text-align: center;
+		margin-bottom: 1em;
+		margin-top: 1em;
+	}
+</style>

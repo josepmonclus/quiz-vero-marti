@@ -1,25 +1,27 @@
 ---
 interface Props {
 	question: string;
-	answer: string;
 }
 
-const { question, answer } = Astro.props;
+const { question } = Astro.props;
+
+import { questions } from '../data/data';
 ---
 
 <div class="w-full max-w">
     <form class="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <input id="input-question-id" type="text" class="hidden" value={question}>
         <div class="mb-4">
-            <label class="block text-neon-light text-sm font-bold mb-2" for="answer">
-                {question}
+            <label class="label-question block text-neon-light text-sm font-bold mb-2" for="answer">
+                ...
             </label>
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-neon-light leading-tight focus:outline-none focus:shadow-outline" 
-                id="answer" 
+                id="input-answer" 
                 type="text" 
                 placeholder="Resposta">
         </div>
         <div class="flex items-center justify-center pt-5">
-            <button class="bg-neon-light hover:bg-neon-medium-light text-white font-bold py-2 px-6 mx-10 rounded focus:outline-none focus:shadow-outline" type="button">
+            <button class="btn-answer bg-neon-light hover:bg-neon-medium-light text-white font-bold py-2 px-6 mx-10 rounded focus:outline-none focus:shadow-outline" type="button">
               Ho tenim!
             </button>
             <a class="open-popup inline-block align-baseline font-bold text-sm text-neon-light hover:text-neon-medium-light" href="#">
@@ -31,6 +33,51 @@ const { question, answer } = Astro.props;
         Made with ❤️️ by Josep, Bernal & Pol
       </p>
 </div>
+
+<script>
+    import { encodeSHA256 } from '../scripts/sha256';
+    import { questions } from '../data/data';
+
+    let answerBtn: HTMLElement = document.querySelector('.btn-answer');
+
+    answerBtn.addEventListener('click', async () => {
+        const question = document.getElementById('input-question-id').value;
+        const inputValue = document.getElementById('input-answer').value;
+        let hash256 = await encodeSHA256(inputValue)
+
+        console.log(question + '-' + inputValue)
+        console.log(questions[question].answer)
+        console.log(hash256)
+        console.log(questions[question].answer === hash256)
+
+        if (questions[question].answer === hash256){
+            nextQuestion()
+        }
+    });
+
+    const setNewQuestion = () => {
+        const question = parseInt(document.getElementById('input-question-id').value);
+        document.querySelector('.label-question').innerHTML = questions[question].question;
+        
+        const inputAnswer = document.getElementById('input-answer')
+        inputAnswer.value = ''
+        inputAnswer.placeholder = questions[question].placeholder;
+
+        
+    }
+
+    const nextQuestion = () => {
+        const question = parseInt(document.getElementById('input-question-id').value);
+
+        console.log(question)
+
+        document.getElementById('input-question-id').value = question + 1;
+
+        setNewQuestion()
+    }
+
+    setNewQuestion()
+</script>
 
 <style>
     .question {

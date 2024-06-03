@@ -11,6 +11,8 @@
 </div>
 
 <script >
+    import { msgs_help } from '../data/data';
+
     let popup:  HTMLElement  = document.getElementById('popup');
     let closeBtn: HTMLElement = popup.querySelector('.close-popup');
     let modalText = popup.querySelector('.popup-text');
@@ -37,10 +39,4 @@
         const randomIndex = Math.floor(Math.random() * array.length);
         return array[randomIndex];
     }
-
-    const msgs_help = [
-        'Aquí no hem vingut a ajudar-vos! 😁',
-        'Ajuda? 🤣',
-        '🖕',
-    ]
 </script>

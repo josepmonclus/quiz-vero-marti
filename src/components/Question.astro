@@ -3,6 +3,7 @@ interface Props {
 	question: string;
 }
 
+
 const { question } = Astro.props;
 
 import { questions } from '../data/data';
@@ -39,6 +40,43 @@ import { questions } from '../data/data';
     import { questions } from '../data/data';
 
     let answerBtn: HTMLElement = document.querySelector('.btn-answer');
+const showPopup = () => {
+    const popup = document.createElement('div');
+    popup.style.position = 'fixed';
+    popup.style.top = '0';
+    popup.style.left = '0';
+    popup.style.width = '100%';
+    popup.style.height = '100%';
+    popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    popup.style.display = 'flex';
+    popup.style.flexDirection = 'column';
+    popup.style.justifyContent = 'center';
+    popup.style.alignItems = 'center';
+    popup.style.zIndex = '1000';
+    popup.style.padding = '10px'; // Añadido para asegurar que el contenido se vea bien en móviles
+
+    const video = document.createElement('video');
+    video.src = '/videoplayback.mp4';
+    video.autoplay = true;
+    video.loop = true;
+    video.style.width = '100%'; // Cambiado a 100% para que se ajuste al ancho de la pantalla
+    video.style.height = 'auto'; // Cambiado a auto para mantener la proporción del video
+    video.style.objectFit = 'cover';
+
+    const timer = document.createElement('div');
+    timer.style.position = 'absolute';
+    timer.style.bottom = '20px';
+    timer.style.color = '#fff';
+    timer.style.fontSize = '20px';
+    timer.style.textAlign = 'center'; // Asegura que el texto esté centrado en móviles
+
+    popup.appendChild(video);
+    popup.appendChild(timer);
+    document.body.appendChild(popup);
+
+    let remainingTime = Math.pow(2, failureCount - 1);
+    timer.innerText = `Temps restant: ${remainingTime} segons`;
+}
 
     answerBtn.addEventListener('click', async () => {
         const question = document.getElementById('input-question-id').value;
@@ -56,6 +94,7 @@ import { questions } from '../data/data';
             let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
             failureCount++;
             localStorage.setItem('failureCount', failureCount);
+           
 
             const showPopup = () => {
                 const popup = document.createElement('div');
@@ -69,13 +108,15 @@ import { questions } from '../data/data';
                 popup.style.justifyContent = 'center';
                 popup.style.alignItems = 'center';
                 popup.style.zIndex = '1000';
+                popup.style.padding = '10px'; // Añadido para asegurar que el contenido se vea bien en móviles
 
                 const video = document.createElement('video');
                 video.src = '/videoplayback.mp4';
                 video.autoplay = true;
                 video.loop = true;
-                video.style.width = 'auto';
-                video.style.height = '80%';
+                video.style.maxWidth = '100%'; // Cambiado a 100% para que se ajuste al ancho de la pantalla
+                video.style.maxHeight = '80%';
+                video.style.height = 'auto'; // Cambiado a auto para mantener la proporción del video
                 video.style.objectFit = 'cover';
 
                 const timer = document.createElement('div');
@@ -83,7 +124,7 @@ import { questions } from '../data/data';
                 timer.style.bottom = '20px';
                 timer.style.color = '#fff';
                 timer.style.fontSize = '20px';
-
+                timer.style.textAlign = 'center'; // Asegura que el texto esté centrado en móviles
                 popup.appendChild(video);
                 popup.appendChild(timer);
                 document.body.appendChild(popup);
@@ -153,13 +194,11 @@ import { questions } from '../data/data';
 
     setNewQuestion()
 </script>
-
 <style>
     .question {
         border: 1px solid rgba(var(--neon-medium-light), 80%);
         border-radius: 8px;
         padding: 3rem 0;
-        /* background: linear-gradient(45deg, rgba(var(--neon-medium-light), 66%), rgba(var(--neon-medium-dark), 33%)); */
         background-color: rgb(var(--neon-medium-dark));
         text-align: center;
         font-size: 2rem;
@@ -167,5 +206,27 @@ import { questions } from '../data/data';
 
     .question-text {
         margin-bottom: 50px;
+    }
+
+    @media (max-width: 768px) {
+        .question {
+            padding: 2rem 0;
+            font-size: 1.5rem;
+        }
+
+        .question-text {
+            margin-bottom: 30px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .question {
+            padding: 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .question-text {
+            margin-bottom: 20px;
+        }
     }
 </style>

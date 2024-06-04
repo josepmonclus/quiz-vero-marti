@@ -79,11 +79,11 @@ const showPopup = () => {
 }
 
     answerBtn.addEventListener('click', async () => {
-        const question = document.getElementById('input-question-id').value;
-        const inputValue = document.getElementById('input-answer').value;
-        let hash256 = await encodeSHA256(inputValue)
+        const question = (document.getElementById('input-question-id') as HTMLInputElement).value;
+        const input = document.getElementById('input-answer') as HTMLInputElement;
+        let hash256 = await encodeSHA256(input.value)
 
-        console.log(question + '-' + inputValue)
+        console.log(question + '-' + input.value)
         console.log(questions[question].answer)
         console.log(hash256)
         console.log(questions[question].answer === hash256)
@@ -91,6 +91,9 @@ const showPopup = () => {
         if (questions[question].answer === hash256){
             nextQuestion()
         } else {
+            (document.getElementById('input-question-id') as HTMLInputElement).value = '0'
+            setNewQuestion()
+            
             let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
             failureCount++;
             localStorage.setItem('failureCount', failureCount);
@@ -172,14 +175,12 @@ const showPopup = () => {
     });
 
     const setNewQuestion = () => {
-        const question = parseInt(document.getElementById('input-question-id').value);
+        const question = parseInt((document.getElementById('input-question-id') as HTMLInputElement).value);
         document.querySelector('.label-question').innerHTML = questions[question].question;
         localStorage.setItem('failureCount', '0');
-        const inputAnswer = document.getElementById('input-answer')
+        const inputAnswer = document.getElementById('input-answer') as HTMLInputElement
         inputAnswer.value = ''
         inputAnswer.placeholder = questions[question].placeholder;
-
-        
     }
 
     const nextQuestion = () => {

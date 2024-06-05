@@ -19,7 +19,8 @@ import { questions } from '../data/data';
             <input class="shadow appearance-none border rounded w-full py-2 px-3 text-neon-light leading-tight focus:outline-none focus:shadow-outline" 
                 id="input-answer" 
                 type="text" 
-                placeholder="Resposta">
+                placeholder="Resposta"
+                autocomplete="off">
         </div>
         <div class="flex items-center justify-center pt-5">
             <button class="btn-answer bg-neon-light hover:bg-neon-medium-light text-white font-bold py-2 px-6 mx-10 rounded focus:outline-none focus:shadow-outline" type="button">
@@ -38,6 +39,7 @@ import { questions } from '../data/data';
 <script>
     import { encodeSHA256 } from '../scripts/sha256';
     import { questions } from '../data/data';
+    import confetti from 'canvas-confetti';   
 
     let answerBtn: HTMLElement = document.querySelector('.btn-answer');
 const showPopup = () => {
@@ -75,22 +77,49 @@ const showPopup = () => {
     document.body.appendChild(popup);
 
     let remainingTime = Math.pow(2, failureCount - 1);
-    timer.innerText = `Temps restant: ${remainingTime} segons`;
-}
+        timer.innerText = `Temps restant: ${remainingTime} segons`;
+    }
+
+    const fireworksOfConfetti = () => {
+        var duration = 5 * 1000;
+        var animationEnd = Date.now() + duration;
+        var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        var interval = setInterval(function() {
+        var timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+
+        var particleCount = 50 * (timeLeft / duration);
+            // since particles fall down, start a bit higher than random
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+            confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+        }, 250);
+    }
 
     answerBtn.addEventListener('click', async () => {
-        const question = document.getElementById('input-question-id').value;
-        const inputValue = document.getElementById('input-answer').value;
-        let hash256 = await encodeSHA256(inputValue)
+        const question = (document.getElementById('input-question-id') as HTMLInputElement).value;
+        const input = document.getElementById('input-answer') as HTMLInputElement;
+        let hash256 = await encodeSHA256(input.value.toUpperCase())
 
-        console.log(question + '-' + inputValue)
-        console.log(questions[question].answer)
-        console.log(hash256)
+        console.log(question + '-' + input.value.toUpperCase())
+        console.log('correct answer: ' + questions[question].answer)
+        console.log('input a sha256: ' + hash256)
         console.log(questions[question].answer === hash256)
 
         if (questions[question].answer === hash256){
+            fireworksOfConfetti()
             nextQuestion()
         } else {
+            (document.getElementById('input-question-id') as HTMLInputElement).value = '0'
+            setNewQuestion()
+
             let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
             failureCount++;
             localStorage.setItem('failureCount', failureCount);
@@ -162,7 +191,7 @@ const showPopup = () => {
                 }, Math.pow(2, failureCount - 1) * 1000);
             };
 
-            showPopup();
+            // showPopup();
         }
 
         /*window.addEventListener('load', () => {
@@ -172,14 +201,12 @@ const showPopup = () => {
     });
 
     const setNewQuestion = () => {
-        const question = parseInt(document.getElementById('input-question-id').value);
+        const question = parseInt((document.getElementById('input-question-id') as HTMLInputElement).value);
         document.querySelector('.label-question').innerHTML = questions[question].question;
         localStorage.setItem('failureCount', '0');
-        const inputAnswer = document.getElementById('input-answer')
+        const inputAnswer = document.getElementById('input-answer') as HTMLInputElement
         inputAnswer.value = ''
         inputAnswer.placeholder = questions[question].placeholder;
-
-        
     }
 
     const nextQuestion = () => {

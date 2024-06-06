@@ -42,9 +42,9 @@ import LastPopup from './LastPopup.astro';
 </div>
 
 <script>
-    import { encodeSHA256 } from '../scripts/sha256';
     import { questions } from '../data/data';
     import confetti from 'canvas-confetti';   
+    import CryptoJS from 'crypto-js';
 
     let answerBtn: HTMLElement = document.querySelector('.btn-answer');
 
@@ -346,6 +346,13 @@ import LastPopup from './LastPopup.astro';
     }
 
     setNewQuestion()
+
+    const encodeSHA256 = async (message) => {
+        const hashDigest = CryptoJS.SHA256(message).toString(CryptoJS.enc.Hex);
+        // console.log(hashDigest)
+
+        return hashDigest;
+    }
 </script>
 <style>
     .question {

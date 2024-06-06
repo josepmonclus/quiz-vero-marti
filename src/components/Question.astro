@@ -44,49 +44,51 @@ import { questions } from '../data/data';
     import confetti from 'canvas-confetti';   
 
     let answerBtn: HTMLElement = document.querySelector('.btn-answer');
-const showPopup = () => {
-    const popup = document.createElement('div');
-    popup.style.position = 'fixed';
-    popup.style.top = '0';
-    popup.style.left = '0';
-    popup.style.width = '100%';
-    popup.style.height = '100%';
-    popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-    popup.style.display = 'flex';
-    popup.style.flexDirection = 'column';
-    popup.style.justifyContent = 'center';
-    popup.style.alignItems = 'center';
-    popup.style.zIndex = '1000';
-    popup.style.padding = '10px'; // Añadido para asegurar que el contenido se vea bien en móviles
 
-    const video = document.createElement('video');
-    video.src = '/videoplayback.mp4';
-    video.autoplay = true;
-    video.loop = true;
-    video.style.width = '100%'; // Cambiado a 100% para que se ajuste al ancho de la pantalla
-    video.style.height = 'auto'; // Cambiado a auto para mantener la proporción del video
-    video.style.objectFit = 'cover';
+    const showPopup = () => {
+        const popup = document.createElement('div');
+        popup.style.position = 'fixed';
+        popup.style.top = '0';
+        popup.style.left = '0';
+        popup.style.width = '100%';
+        popup.style.height = '100%';
+        popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        popup.style.display = 'flex';
+        popup.style.flexDirection = 'column';
+        popup.style.justifyContent = 'center';
+        popup.style.alignItems = 'center';
+        popup.style.zIndex = '1000';
+        popup.style.padding = '10px'; // Añadido para asegurar que el contenido se vea bien en móviles
 
-    const timer = document.createElement('div');
-    timer.style.position = 'absolute';
-    timer.style.bottom = '20px';
-    timer.style.color = '#fff';
-    timer.style.fontSize = '20px';
-    timer.style.textAlign = 'center'; // Asegura que el texto esté centrado en móviles
+        const video = document.createElement('video');
+        video.src = '/videoplayback.mp4';
+        video.autoplay = true;
+        video.loop = true;
+        video.style.width = '100%'; // Cambiado a 100% para que se ajuste al ancho de la pantalla
+        video.style.height = 'auto'; // Cambiado a auto para mantener la proporción del video
+        video.style.objectFit = 'cover';
 
-    popup.appendChild(video);
-    popup.appendChild(timer);
-    document.body.appendChild(popup);
-    let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
-    let remainingTime = Math.pow(2, failureCount - 1);
+        const timer = document.createElement('div');
+        timer.style.position = 'absolute';
+        timer.style.bottom = '20px';
+        timer.style.color = '#fff';
+        timer.style.fontSize = '20px';
+        timer.style.textAlign = 'center'; // Asegura que el texto esté centrado en móviles
+
+        popup.appendChild(video);
+        popup.appendChild(timer);
+        document.body.appendChild(popup);
+        let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
+        let remainingTime = Math.pow(2, failureCount - 1);
         timer.innerText = `Temps restant: ${remainingTime} segons`;
     }
+
     const  showReward = async (question) =>{
         const hearth = document.getElementById('hearth');
-        let size = parseInt(localStorage.getItem('hearthSize') || '16');
-        size += 4;
-        if(size>90) size = 90;
-        hearth.style.fontSize = `${size}px`;
+        let size = parseFloat(localStorage.getItem('hearthSize') || '0.75');
+        size += 0.2;
+        if(size>4) size = 4;
+        hearth.style.fontSize = `${size}rem`;
         localStorage.setItem('hearthSize', size.toString());
         const rewardPopup = document.createElement('div');
         rewardPopup.style.position = 'fixed';
@@ -95,24 +97,29 @@ const showPopup = () => {
         rewardPopup.style.transform = 'translate(-50%, -50%)';
         rewardPopup.style.width = '50%'; 
         rewardPopup.style.height = '50%'; 
-        rewardPopup.style.backgroundColor = 'rgba(255, 32, 78, 1)';
+        rewardPopup.classList.add('bg-neon-light');
         rewardPopup.style.borderRadius = '10px';
         rewardPopup.style.padding = '40px'; 
         rewardPopup.style.zIndex = '1002'; 
         rewardPopup.style.textAlign = 'center';
-        rewardPopup.style.fontSize = '48px'; 
+        rewardPopup.style.fontSize = '5vw'; 
         rewardPopup.style.color = '#333';
         rewardPopup.style.display = 'flex';
         rewardPopup.style.flexDirection = 'column';
         rewardPopup.style.justifyContent = 'center';
         rewardPopup.style.alignItems = 'center';
 
-        const title = document.createElement('h2');
+        const aplause = document.createElement('div');
+        aplause.innerText = '👏👏👏';
+        rewardPopup.appendChild(aplause);
+
+        const title = document.createElement('div');
         title.style.color = 'white';
         title.innerText = 'Codi:';
-        title.style.marginBottom = '20px'; 
+        title.classList.add('my-5');
 
-        rewardPopup.appendChild(title);
+        const rewardText = document.createElement('div');
+        rewardText.style.color = 'white';
 
         if (questions[question].reward_type === 'num') {
             let rewardValue;
@@ -129,8 +136,9 @@ const showPopup = () => {
                     break;
                 }
             }
-            const rewardText = document.createElement('div');
-            rewardText.style.color = 'white';
+
+            rewardPopup.appendChild(title);
+
             rewardText.innerText = `${rewardLetter} = ${rewardValue}`;
             rewardPopup.appendChild(rewardText);
         } else if (questions[question].reward_type === 'let') {
@@ -150,19 +158,20 @@ const showPopup = () => {
             }
             let hiddenWord = "_ _ _ _".split(" ");
             hiddenWord[rewardPos - 1] = rewardLetter;
-            const rewardText = document.createElement('div');
-            rewardText.style.color = 'white';
+
+            rewardPopup.appendChild(title);
+
             rewardText.innerText = hiddenWord.join(" ");
             rewardPopup.appendChild(rewardText);
         }
 
         document.body.appendChild(rewardPopup);
         
-
-            setTimeout(() => {
-                document.body.removeChild(rewardPopup);
-            }, 5000);
+        setTimeout(() => {
+            document.body.removeChild(rewardPopup);
+        }, 5000);
     }
+
     const fireworksOfConfetti = () => {
         var duration = 5 * 1000;
         var animationEnd = Date.now() + duration;
@@ -275,7 +284,7 @@ const showPopup = () => {
                 }, Math.pow(2, failureCount - 1) * 1000);
             };
 
-            showPopup();
+            // showPopup();
         }
 
         /*window.addEventListener('load', () => {
@@ -305,8 +314,6 @@ const showPopup = () => {
     }
 
     setNewQuestion()
-
-    
 </script>
 <style>
     .question {

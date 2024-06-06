@@ -7,6 +7,7 @@ interface Props {
 const { question } = Astro.props;
 
 import { questions } from '../data/data';
+import LastPopup from './LastPopup.astro';
 ---
 
 <div class="w-full max-w">
@@ -37,6 +38,8 @@ import { questions } from '../data/data';
         </a>
       </p>
 </div>
+
+<lastPopup/>
 
 <script>
     import { encodeSHA256 } from '../scripts/sha256';
@@ -195,6 +198,69 @@ import { questions } from '../data/data';
         }, 250);
     }
 
+    const showLastPopUp = () => {
+        const lastPopup = document.getElementById('lastPopup');
+        if (lastPopup) {
+            const modalText = lastPopup.querySelector('.popup-text');
+            if (modalText) {
+                modalText.textContent = "LAST TEST";
+            }
+            lastPopup.classList.remove('hidden');
+        } else {
+            console.error('lastPopup element not found');
+        }
+    };
+
+    const  showLastPopUp1 = async () =>{
+        const hearth = document.getElementById('hearth');
+        let size = parseFloat(localStorage.getItem('hearthSize') || '0.75');
+        size += 0.2;
+        if(size>4) size = 4;
+        hearth.style.fontSize = `${size}rem`;
+        localStorage.setItem('hearthSize', size.toString());
+        const rewardPopup = document.createElement('div');
+        rewardPopup.style.position = 'fixed';
+        rewardPopup.style.top = '50%';
+        rewardPopup.style.left = '50%';
+        rewardPopup.style.transform = 'translate(-50%, -50%)';
+        rewardPopup.style.width = '50%'; 
+        rewardPopup.style.height = '55%'; 
+        rewardPopup.classList.add('bg-neon-light');
+        rewardPopup.style.borderRadius = '10px';
+        rewardPopup.style.padding = '40px'; 
+        rewardPopup.style.zIndex = '1002'; 
+        rewardPopup.style.textAlign = 'center';
+        rewardPopup.style.fontSize = '5vw'; 
+        rewardPopup.style.color = '#333';
+        rewardPopup.style.display = 'flex';
+        rewardPopup.style.flexDirection = 'column';
+        rewardPopup.style.justifyContent = 'center';
+        rewardPopup.style.alignItems = 'center';
+
+        const aplause = document.createElement('div');
+        aplause.innerText = '❤️❤️❤️';
+        rewardPopup.appendChild(aplause);
+
+        const title = document.createElement('div');
+        title.style.color = 'white';
+        title.innerText = 'ENHORABONA';
+        title.classList.add('my-5');
+
+        const rewardText = document.createElement('div');
+        rewardText.style.color = 'white';
+
+        rewardPopup.appendChild(title);
+
+        rewardText.innerText = `Disfruteu del regal, us estimem!\n❤️❤️❤️`;
+        rewardPopup.appendChild(rewardText);
+
+        document.body.appendChild(rewardPopup);
+        
+        /*setTimeout(() => {
+            document.body.removeChild(rewardPopup);
+        }, 5000);*/
+    }
+
     answerBtn.addEventListener('click', async () => {
         const question = (document.getElementById('input-question-id') as HTMLInputElement).value;
         const input = document.getElementById('input-answer') as HTMLInputElement;
@@ -284,7 +350,7 @@ import { questions } from '../data/data';
                 }, Math.pow(2, failureCount - 1) * 1000);
             };
 
-            // showPopup();
+            showPopup();
         }
 
         /*window.addEventListener('load', () => {
@@ -307,10 +373,16 @@ import { questions } from '../data/data';
         const question = parseInt(questionElement.value);
 
         console.log(question)
-
-        questionElement.value = (question + 1).toString();
-
-        setNewQuestion()
+        //Check last question
+        if (question < questions.length - 1) {
+            questionElement.value = (question + 1).toString();
+            setNewQuestion()
+        }else{
+            console.log('Last question done.');
+            //showLastPopUp();
+            showLastPopUp1();
+        }
+        
     }
 
     setNewQuestion()

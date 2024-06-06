@@ -32,7 +32,7 @@ import { questions } from '../data/data';
           </div>
     </form>
     <p class="text-center text-gray-500 text-xs">
-        Made with ❤️️ by Josep, Bernal & Pol
+        Made with ❤️️ by Josep, Mireia, Gina, Aleix, Nuria, Ona, Bernal & Pol
       </p>
 </div>
 
@@ -75,11 +75,86 @@ const showPopup = () => {
     popup.appendChild(video);
     popup.appendChild(timer);
     document.body.appendChild(popup);
-
+    let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
     let remainingTime = Math.pow(2, failureCount - 1);
         timer.innerText = `Temps restant: ${remainingTime} segons`;
     }
+    const  showReward = async (question) =>{
+        const rewardPopup = document.createElement('div');
+        rewardPopup.style.position = 'fixed';
+        rewardPopup.style.top = '50%';
+        rewardPopup.style.left = '50%';
+        rewardPopup.style.transform = 'translate(-50%, -50%)';
+        rewardPopup.style.width = '80%'; 
+        rewardPopup.style.height = '50%'; 
+        rewardPopup.style.backgroundColor = 'rgba(255, 32, 78, 1)';
+        rewardPopup.style.borderRadius = '10px';
+        rewardPopup.style.padding = '40px'; 
+        rewardPopup.style.zIndex = '1002'; 
+        rewardPopup.style.textAlign = 'center';
+        rewardPopup.style.fontSize = '48px'; 
+        rewardPopup.style.color = '#333';
+        rewardPopup.style.display = 'flex';
+        rewardPopup.style.flexDirection = 'column';
+        rewardPopup.style.justifyContent = 'center';
+        rewardPopup.style.alignItems = 'center';
 
+        const title = document.createElement('h2');
+        title.style.color = 'white';
+        title.innerText = 'Codi:';
+        title.style.marginBottom = '20px'; 
+
+        rewardPopup.appendChild(title);
+
+        if (questions[question].reward_type === 'num') {
+            let rewardValue;
+            for (let i = 0; i <= 9; i++) {
+                if (await encodeSHA256(i.toString()) === questions[question].reward_num) {
+                    rewardValue = i;
+                    break;
+                }
+            }
+            let rewardLetter;
+            for (let letter of ['A', 'B', 'C', 'D']) {
+                if (await encodeSHA256(letter) === questions[question].reward_let) {
+                    rewardLetter = letter;
+                    break;
+                }
+            }
+            const rewardText = document.createElement('div');
+            rewardText.style.color = 'white';
+            rewardText.innerText = `${rewardLetter} = ${rewardValue}`;
+            rewardPopup.appendChild(rewardText);
+        } else if (questions[question].reward_type === 'let') {
+            let rewardPos;
+            for (let i = 0; i <= 9; i++) {
+                if (await encodeSHA256(i.toString()) === questions[question].reward_pos) {
+                    rewardPos = i;
+                    break;
+                }
+            }
+            let rewardLetter;
+            for (let letter of ['A', 'B', 'C', 'D']) {
+                if (await encodeSHA256(letter) === questions[question].reward_let) {
+                    rewardLetter = letter;
+                    break;
+                }
+            }
+            let hiddenWord = "_ _ _ _".split(" ");
+            hiddenWord[rewardPos - 1] = rewardLetter;
+            const rewardText = document.createElement('div');
+            rewardText.style.color = 'white';
+            rewardText.innerText = hiddenWord.join(" ");
+            rewardPopup.appendChild(rewardText);
+        }
+
+        document.body.appendChild(rewardPopup);
+        
+
+            setTimeout(() => {
+                document.body.removeChild(rewardPopup);
+            }, 5000);
+    }
     const fireworksOfConfetti = () => {
         var duration = 5 * 1000;
         var animationEnd = Date.now() + duration;
@@ -115,6 +190,7 @@ const showPopup = () => {
 
         if (questions[question].answer === hash256){
             fireworksOfConfetti()
+            showReward(question)
             nextQuestion()
         } else {
             (document.getElementById('input-question-id') as HTMLInputElement).value = '0'
@@ -122,7 +198,7 @@ const showPopup = () => {
 
             let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
             failureCount++;
-            localStorage.setItem('failureCount', failureCount);
+            localStorage.setItem('failureCount', failureCount.toString());
            
 
             const showPopup = () => {
@@ -191,7 +267,7 @@ const showPopup = () => {
                 }, Math.pow(2, failureCount - 1) * 1000);
             };
 
-            // showPopup();
+            showPopup();
         }
 
         /*window.addEventListener('load', () => {
@@ -210,16 +286,19 @@ const showPopup = () => {
     }
 
     const nextQuestion = () => {
-        const question = parseInt(document.getElementById('input-question-id').value);
+        const questionElement = document.getElementById('input-question-id') as HTMLInputElement;
+        const question = parseInt(questionElement.value);
 
         console.log(question)
 
-        document.getElementById('input-question-id').value = question + 1;
+        questionElement.value = (question + 1).toString();
 
         setNewQuestion()
     }
 
     setNewQuestion()
+
+    
 </script>
 <style>
     .question {

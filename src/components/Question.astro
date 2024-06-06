@@ -32,7 +32,9 @@ import { questions } from '../data/data';
           </div>
     </form>
     <p class="text-center text-gray-500 text-xs">
-        Made with ❤️️ by Josep, Mireia, Gina, Aleix, Nuria, Ona, Bernal & Pol
+        Made with <a href="/video.mp4" target="_blank" class="heart-link">
+            <span id="hearth">❤️️</span> by Josep, Mireia, Gina, Aleix, Nuria, Ona, Bernal & Pol 
+        </a>
       </p>
 </div>
 
@@ -80,12 +82,18 @@ const showPopup = () => {
         timer.innerText = `Temps restant: ${remainingTime} segons`;
     }
     const  showReward = async (question) =>{
+        const hearth = document.getElementById('hearth');
+        let size = parseInt(localStorage.getItem('hearthSize') || '16');
+        size += 4;
+        if(size>90) size = 90;
+        hearth.style.fontSize = `${size}px`;
+        localStorage.setItem('hearthSize', size.toString());
         const rewardPopup = document.createElement('div');
         rewardPopup.style.position = 'fixed';
         rewardPopup.style.top = '50%';
         rewardPopup.style.left = '50%';
         rewardPopup.style.transform = 'translate(-50%, -50%)';
-        rewardPopup.style.width = '80%'; 
+        rewardPopup.style.width = '50%'; 
         rewardPopup.style.height = '50%'; 
         rewardPopup.style.backgroundColor = 'rgba(255, 32, 78, 1)';
         rewardPopup.style.borderRadius = '10px';

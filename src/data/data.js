@@ -25,7 +25,7 @@ export const questions = [
         reward_type:"let"
     },
     {
-        question: 'A què et arrossegar a buscar la Mireia, amb la taja, per barraques?',
+        question: 'A què et va arrossegar a buscar la Mireia, amb la taja, per barraques?',
         answer: '9a073c280243877c39078284f07a062e34a58d2b469bbaeb12fedca87d4b4ae2',
         placeholder: '',
         reward_let:'',

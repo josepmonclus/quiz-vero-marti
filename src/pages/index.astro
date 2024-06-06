@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Question from '../components/Question.astro'
 import Popup from '../components/Popup.astro'
+import Countdown from '../components/Countdown.astro';
 ---
 <style>
 	main {
@@ -18,7 +19,6 @@ import Popup from '../components/Popup.astro'
 		font-weight: 700;
 		line-height: 1;
 		text-align: center;
-		margin-bottom: 1em;
 		margin-top: 1em;
 	}
 
@@ -47,9 +47,11 @@ import Popup from '../components/Popup.astro'
 
 <Layout title="Give me my fuckin money!">
 	<main>
-		<h1 class="text-neon-medium-light">
+		<h1 class="text-neon-medium-light my-5">
 			Quiz <span class="text-neon-light">Vero</span> & <span class="text-neon-light">Martí</span>
 		</h1>
+
+		<Countdown />
 		
 		<Question 
 			question=0

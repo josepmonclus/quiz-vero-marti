@@ -1,0 +1,54 @@
+---
+
+---
+<style>
+    .countdown {
+        font-size: 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .countdown {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .countdown {
+			font-size: 1.5rem;
+		}
+    }
+</style>
+
+<div class="w-full mb-5">
+    <div class="flex items-center justify-center">
+        <!-- {timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s -->
+        <span class="countdown text-gray-200">
+            <span id="dias">-</span>d <span id="horas">-</span>h<span id="minutos">-</span>m<span id="segundos">-</span>s
+        </span>
+    </div>
+</div>
+
+<script>
+    const targetDate = new Date('2024-06-17T00:00:00').getTime();
+
+    const timer = setInterval(() => {
+        updateCountdown();
+    }, 1000);
+
+    const updateCountdown = () => {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        if (difference > 0) {
+            document.getElementById('dias').innerHTML = Math.floor(difference / (1000 * 60 * 60 * 24)).toString()
+            document.getElementById('horas').innerHTML = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString()
+            document.getElementById('minutos').innerHTML = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)).toString()
+            document.getElementById('segundos').innerHTML = Math.floor((difference % (1000 * 60)) / 1000).toString()
+        } else {
+            document.getElementById('dias').innerHTML = Math.floor(difference / (1000 * 60 * 60 * 24) * (-1)).toString()
+            document.getElementById('horas').innerHTML = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60) * (-1)).toString()
+            document.getElementById('minutos').innerHTML = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60) * (-1)).toString()
+            document.getElementById('segundos').innerHTML = Math.floor((difference % (1000 * 60)) / 1000 * (-1)).toString()
+        }
+    }
+</script>

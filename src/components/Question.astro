@@ -82,7 +82,7 @@ import LastPopup from './LastPopup.astro';
         popup.appendChild(timer);
         document.body.appendChild(popup);
         let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
-        let remainingTime = Math.pow(2, failureCount - 1);
+        let remainingTime = failureCount;
         timer.innerText = `Temps restant: ${remainingTime} segons`;
     }
 
@@ -231,8 +231,8 @@ import LastPopup from './LastPopup.astro';
             (document.getElementById('input-question-id') as HTMLInputElement).value = '0'
             setNewQuestion()
 
-            let failureCount = parseInt(localStorage.getItem('failureCount')) || 1;
-            failureCount++;
+            let failureCount = parseInt(localStorage.getItem('failureCount')) || 0;
+            failureCount = failureCount + 5;
             localStorage.setItem('failureCount', failureCount.toString());
            
 
@@ -269,7 +269,7 @@ import LastPopup from './LastPopup.astro';
                 popup.appendChild(timer);
                 document.body.appendChild(popup);
 
-                let remainingTime = Math.pow(2, failureCount - 1);
+                let remainingTime = failureCount;
                 timer.innerText = `Temps restant: ${remainingTime} segons`;
 
                 const interval = setInterval(() => {
@@ -299,7 +299,7 @@ import LastPopup from './LastPopup.astro';
 
                     popup.appendChild(closeButton);
                     timer.style.display = 'none';
-                }, Math.pow(2, failureCount - 1) * 1000);
+                }, failureCount * 1000);
             };
 
             showPopup();
@@ -314,7 +314,7 @@ import LastPopup from './LastPopup.astro';
     const setNewQuestion = () => {
         const question = parseInt((document.getElementById('input-question-id') as HTMLInputElement).value);
         document.querySelector('.label-question').innerHTML = questions[question].question;
-        localStorage.setItem('failureCount', '0');
+        // localStorage.setItem('failureCount', '0');
         const inputAnswer = document.getElementById('input-answer') as HTMLInputElement
         inputAnswer.value = ''
         inputAnswer.placeholder = questions[question].placeholder;

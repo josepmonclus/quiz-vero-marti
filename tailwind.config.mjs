@@ -4,10 +4,10 @@ export default {
 	theme: {
 		extend: {
 			colors: {
-				'neon-dark': '#00224D',
-				'neon-medium-dark':  '#5D0E41',
-				'neon-medium-light': '#A0153E',
-				'neon-light': '#FF204E',
+				'neon-dark': '#FF0080',
+				'neon-medium-dark':  '#FF5580',
+				'neon-medium-light': '#FFAA80',
+				'neon-light': '#FFFF80',
 			}
 		},
 		

@@ -20,6 +20,19 @@ import Countdown from '../components/Countdown.astro';
 		line-height: 1;
 		text-align: center;
 		margin-top: 1em;
+		text-shadow:
+			-1px -1px 0 rgb(var(--neon-dark)),  
+			1px -1px 0 rgb(var(--neon-dark)),
+			-1px 1px 0 rgb(var(--neon-dark)),
+			3px 3px 0 rgb(var(--neon-dark));
+	}
+
+	h1 span {
+		text-shadow:
+			-1px -1px 0 rgb(var(--neon-light)),  
+			1px -1px 0 rgb(var(--neon-light)),
+			-1px 1px 0 rgb(var(--neon-light)),
+			3px 3px 0 rgb(var(--neon-light));
 	}
 
 	@media (max-width: 768px) {
@@ -47,11 +60,11 @@ import Countdown from '../components/Countdown.astro';
 
 <Layout title="Give me my fuckin money!">
 	<main>
-		<h1 class="text-neon-medium-light my-5">
-			Quiz <span class="text-neon-light">Vero</span> & <span class="text-neon-light">Martí</span>
+		<h1 class="text-neon-light my-5">
+			Quiz <span class="text-neon-dark">Lau</span> & <span class="text-neon-dark">Oscar</span>
 		</h1>
 
-		<Countdown />
+		<!-- <Countdown /> -->
 		
 		<Question 
 			question=0
